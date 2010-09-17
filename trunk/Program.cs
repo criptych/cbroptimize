@@ -122,7 +122,10 @@ namespace cbrOptimize
             }
             Console.WriteLine();
             Console.WriteLine("Packing back...");
-            Process.Start("7z", string.Format("a -tzip -mx0 \"{0}\" \"{1}\\*.jpg\"", name + ".cbz", tempDirName));
+            psi = new ProcessStartInfo("7z", string.Format("a -tzip -mx0 \"{0}\" \"{1}\\*.jpg\"", name + ".cbz", tempDirName)); //pack to zip, compression 0
+            psi.CreateNoWindow = true;
+            psi.UseShellExecute = false;
+            Process.Start(psi).WaitForExit();
             return 0;
         }
 
