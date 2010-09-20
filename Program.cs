@@ -46,7 +46,7 @@ namespace cbrOptimize
                 Console.WriteLine("Configuration error: width must be positive!");
                 return 4;
             }
-            Console.WriteLine(string.Format("cbroptimize by Borza Industries - quality={0} width={1}",quality,desiredWidth));
+            Console.WriteLine(string.Format("cbroptimize by Borza Industries - quality={0} width={1}", quality, desiredWidth));
             encoderParameters = GetEncoderParameters(quality);
 
             if (!File.Exists(name))
@@ -84,36 +84,43 @@ namespace cbrOptimize
 
                 Console.Write("\r                                                        ");
                 Console.Write("\r" + fileName);
-                using (Bitmap originalBmp = new Bitmap(fileName))
+                try
                 {
-                    Bitmap newBmp;
-                    ImageOrientation orientation = GetOrientation(originalBmp);
-                    //if image is portrait oriented, resize to specified width. on landscape, resize to twice the size (it's probably a double page)
-                    int newWidth = orientation == ImageOrientation.Portrait ? desiredWidth : desiredWidth * 2;
-                    if (newWidth < originalBmp.Width)
+                    using (Bitmap originalBmp = new Bitmap(fileName))
                     {
-                        //resize the image
-                        float ratio = (float)newWidth / (float)originalBmp.Width;
-                        //ratio = 0.5f;
-                        newBmp = new Bitmap((int)(ratio * originalBmp.Width), (int)(ratio * originalBmp.Height));
-                        using (Graphics g = Graphics.FromImage(newBmp))
+                        Bitmap newBmp;
+                        ImageOrientation orientation = GetOrientation(originalBmp);
+                        //if image is portrait oriented, resize to specified width. on landscape, resize to twice the size (it's probably a double page)
+                        int newWidth = orientation == ImageOrientation.Portrait ? desiredWidth : desiredWidth * 2;
+                        if (newWidth < originalBmp.Width)
                         {
-                            Matrix m = new Matrix();
-                            m.Scale(1f, 1f);
-                            //g.Transform = m;
-                            g.DrawImage(originalBmp, 0, 0, newBmp.Width, newBmp.Height);
+                            //resize the image
+                            float ratio = (float)newWidth / (float)originalBmp.Width;
+                            //ratio = 0.5f;
+                            newBmp = new Bitmap((int)(ratio * originalBmp.Width), (int)(ratio * originalBmp.Height));
+                            using (Graphics g = Graphics.FromImage(newBmp))
+                            {
+                                Matrix m = new Matrix();
+                                m.Scale(1f, 1f);
+                                //g.Transform = m;
+                                g.DrawImage(originalBmp, 0, 0, newBmp.Width, newBmp.Height);
+                            }
                         }
+                        else
+                            newBmp = originalBmp;
+                        //save to specified quality
+                        string newFileName = fileName + ".jpg";
+                        Encoder qualityEncoder = Encoder.Quality;
+                        EncoderParameter ratio1 = new EncoderParameter(qualityEncoder, quality);
+                        EncoderParameters codecParams = new EncoderParameters(1);
+                        codecParams.Param[0] = ratio1;
+                        newBmp.Save(newFileName, GetCodec(), codecParams);
+                        newBmp.Dispose();
                     }
-                    else
-                        newBmp = originalBmp;
-                    //save to specified quality
-                    string newFileName = fileName + ".jpg";
-                    Encoder qualityEncoder = Encoder.Quality;
-                    EncoderParameter ratio1 = new EncoderParameter(qualityEncoder, quality);
-                    EncoderParameters codecParams = new EncoderParameters(1);
-                    codecParams.Param[0] = ratio1;
-                    newBmp.Save(newFileName, GetCodec(), codecParams);
-                    newBmp.Dispose();
+                }
+                catch (Exception e)
+                {
+                    Console.WriteLine(" <- Warning: could not optimize");
                 }
 
                 FileInfo fi = new FileInfo(fileName);
