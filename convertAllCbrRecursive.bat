@@ -1,0 +1,1 @@
+for /R . %i in (*.cbr) do cbroptimize "%i"
