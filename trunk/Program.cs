@@ -97,7 +97,7 @@ namespace cbrOptimize
                             //resize the image
                             float ratio = (float)newWidth / (float)originalBmp.Width;
                             //ratio = 0.5f;
-                            newBmp = new Bitmap((int)(ratio * originalBmp.Width), (int)(ratio * originalBmp.Height));
+                            newBmp = new Bitmap(newWidth, (int)(ratio * originalBmp.Height));
                             using (Graphics g = Graphics.FromImage(newBmp))
                             {
                                 Matrix m = new Matrix();
