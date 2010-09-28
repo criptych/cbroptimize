@@ -34,7 +34,7 @@ namespace cbrOptimize.Properties {
         
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("30")]
+        [global::System.Configuration.DefaultSettingValueAttribute("50")]
         public long quality {
             get {
                 return ((long)(this["quality"]));
