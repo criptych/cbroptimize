@@ -1,0 +1,3 @@
+cbroptimize is a tool useful for optimizing cbr and cbz comic book archives for mobile devices (android,...). It resizes images inside the archive to a specified size, therefore reducing computing strain on the device to do the resizing itself. It can also decrease JPEG quality to reduce loading time on devices with slow processor.
+
+Output of the program is cbz with no compression (further speed increase as the comic book reader doesn't need to decompress the archive).
